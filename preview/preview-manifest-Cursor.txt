@@ -1,0 +1,61 @@
+preview, not a master
+{
+  "arrangement_path": "midi/arrangement.mid",
+  "arrangement_sha256": "92c07a4f696c529b00269c721a357cc91872c5533a6414e38e2a8518a22b0333",
+  "encode": "libmp3lame CBR 192 kbps, mono source",
+  "excerpt": {
+    "bars": "1-8, the full container",
+    "end_tick": 30720,
+    "sequencing": "chord progression and bass guide, variation A, for the full 8 bars",
+    "start_tick": 0,
+    "study": "s01",
+    "transposition": "none"
+  },
+  "intermediate_wav": "build/preview.wav",
+  "intermediate_wav_note": "The WAV is gitignored build storage. The delivered preview is the MP3.",
+  "intermediate_wav_sha256": "cd45eef190ad8bee44a05bd929c1eb143ad4de650aed018cddadd0c057239575",
+  "label": "preview, not a master",
+  "listening": "No human listening audition was performed for this build.",
+  "mapping": {
+    "bass-guide": "sine at the written pitch, short attack, held for the written duration",
+    "chord-progression": "sine plus a quiet triangle, soft attack, held for the written duration"
+  },
+  "mp3_encode_command": [
+    "ffmpeg",
+    "-y",
+    "-i",
+    "/home/runner/work/neo-soul-chord-progressions/neo-soul-chord-progressions/build/preview.wav",
+    "-codec:a",
+    "libmp3lame",
+    "-b:a",
+    "192k",
+    "/home/runner/work/neo-soul-chord-progressions/neo-soul-chord-progressions/preview/preview.mp3"
+  ],
+  "mp3_path": "preview/preview.mp3",
+  "mp3_sha256": "0775edc543537d4c1bc63a5bbef08c1e84db63ec1d592cf4771927968770bfd0",
+  "pack_id": "neo-soul-chord-progressions",
+  "program_changes": "No program changes are encoded. A conventional GM player will normally use its default piano program for pitched channels unless configured otherwise; compatible GM channel 10 percussion is treated separately. Player behavior may vary.",
+  "renderer": "simple-synth-1.0.0",
+  "renderer_note": "These voices are preview mappings. They are not encoded in the MIDI file.",
+  "rounding": "sample = floor(seconds * sample_rate + 0.5), computed from tick 0; intervals are not summed",
+  "sample_peak": 16477,
+  "sample_peak_dbfs": -5.971435865137219,
+  "sample_peak_note": "This is a sample peak of the integer mix after scaling. It is not a true-peak measurement and it is not LUFS.",
+  "score_seconds": 25.263168,
+  "score_sha256": "de4ebe21ee736d8f3812417ee42361f876903f69b94aa203a0bb13e208670ec4",
+  "seconds_encoded": 25.263175,
+  "source_parts": [
+    {
+      "id": "s01.chords.a",
+      "path": "midi/s01-suspended-step/chords-a.mid",
+      "sha256": "f3f1a8e5d8210bb29c6397b75a14c72e22d74e0033ff934d3694527b137f1a47"
+    },
+    {
+      "id": "s01.bass.a",
+      "path": "midi/s01-suspended-step/bass-guide-a.mid",
+      "sha256": "d916cbaa388ae776dd4a39bcd1a8b644db7b347d9ffd3c919a5c5162a8acd9db"
+    }
+  ],
+  "tempo_authority": "encoded MIDI tempo",
+  "tempo_us": 789474
+}

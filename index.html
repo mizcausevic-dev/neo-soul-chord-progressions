@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Neo-Soul Chord Progressions</title>
+  <style>
+    :root {
+      --paper: #f4ead7;
+      --cream: #fbf6ec;
+      --ink: #2a1c14;
+      --muted: #6d5648;
+      --walnut: #3c241c;
+      --amber: #c97a2a;
+      --line: rgba(42, 28, 20, .16);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background:
+        radial-gradient(900px 320px at 100% -10%, rgba(201, 122, 42, .18), transparent 60%),
+        var(--paper);
+      color: var(--ink);
+      font-family: Georgia, "Iowan Old Style", Palatino, serif;
+      line-height: 1.45;
+      padding-bottom: 84px;
+    }
+    a { color: #8a4b12; }
+    button, .transport { font-family: ui-monospace, Menlo, Consolas, monospace; }
+    .top {
+      position: sticky; top: 0; z-index: 5;
+      display: flex; justify-content: space-between; gap: 16px; align-items: center;
+      padding: 12px 22px;
+      background: rgba(251, 246, 236, .92);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(8px);
+    }
+    .brand { font-family: ui-monospace, Menlo, Consolas, monospace; letter-spacing: .14em; text-transform: uppercase; font-size: .72rem; }
+    .top nav { display: flex; gap: 14px; font-family: ui-monospace, Menlo, Consolas, monospace; font-size: .78rem; }
+    main { width: min(1180px, calc(100% - 2rem)); margin: 0 auto; }
+    .stage > div { min-width: 0; }
+    .stage {
+      display: grid;
+      grid-template-columns: minmax(0, .82fr) minmax(0, 1.18fr);
+      gap: 28px;
+      align-items: start;
+      padding: 28px 0 8px;
+    }
+    h1 { font-weight: 500; font-size: clamp(2.4rem, 6vw, 4.6rem); line-height: .92; margin: 8px 0 12px; letter-spacing: -.03em; }
+    .kicker { font-family: ui-monospace, Menlo, Consolas, monospace; letter-spacing: .16em; text-transform: uppercase; color: var(--amber); font-size: .75rem; margin: 0; }
+    .lede { font-size: 1.15rem; max-width: 38rem; }
+    .meta { color: var(--muted); font-family: ui-monospace, Menlo, Consolas, monospace; font-size: .82rem; }
+    .rail { display: flex; gap: 8px; overflow-x: auto; padding: 8px 0 14px; }
+    .rail button, .switch button, .transport button {
+      border: 1px solid var(--line);
+      background: var(--cream);
+      color: var(--ink);
+      border-radius: 999px;
+      padding: 8px 12px;
+      cursor: pointer;
+    }
+    .rail button[aria-pressed="true"], .switch button[aria-pressed="true"], .transport button[aria-pressed="true"] {
+      background: var(--walnut);
+      color: var(--cream);
+      border-color: var(--walnut);
+    }
+    .switch { display: flex; gap: 8px; align-items: center; margin: 0 0 10px; }
+    .chart {
+      position: relative;
+      background: var(--cream);
+      border-radius: 22px;
+      min-height: 320px;
+      padding: 16px 14px 18px;
+      box-shadow: 0 18px 40px rgba(60, 36, 28, .08);
+    }
+    .columns { position: relative; height: 250px; display: flex; gap: 6px; z-index: 1; }
+    .col { position: relative; flex: 1; min-width: 0; }
+    .col.now { background: rgba(201, 122, 42, .12); border-radius: 10px; }
+    .tone {
+      position: absolute; left: 2px; right: 2px; height: 22px;
+      display: flex; align-items: center; justify-content: center;
+      background: var(--amber); color: #2a1c14; border-radius: 999px;
+      font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 11px;
+    }
+    #leads { position: absolute; inset: 16px 14px 18px; width: calc(100% - 28px); height: calc(100% - 34px); z-index: 0; }
+    .basslane {
+      margin-top: 10px; background: var(--walnut); color: var(--cream);
+      border-radius: 16px; min-height: 74px; position: relative; padding: 28px 14px 12px;
+    }
+    .basslane[hidden] { display: none; }
+    .basslane p { position: absolute; top: 8px; left: 14px; margin: 0; font-family: ui-monospace, Menlo, Consolas, monospace; font-size: .72rem; letter-spacing: .12em; text-transform: uppercase; color: #e7c49a; }
+    .bnote {
+      position: absolute; top: 34px; transform: translateX(-50%);
+      background: #f3ead7; color: var(--ink); border-radius: 999px;
+      padding: 4px 8px; font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 11px;
+    }
+    .status { min-height: 1.2em; color: var(--muted); font-family: ui-monospace, Menlo, Consolas, monospace; font-size: .8rem; }
+    .table-scroll { overflow-x: auto; max-width: 100%; }
+    .files { width: 100%; border-collapse: collapse; font-family: ui-monospace, Menlo, Consolas, monospace; font-size: .82rem; }
+    .files th, .files td { text-align: left; padding: 8px 6px; border-bottom: 1px solid var(--line); }
+    .note, .warn { color: var(--muted); }
+    .play { border-top: 1px solid var(--line); margin-top: 28px; padding-top: 18px; }
+    audio, video { display: block; width: 100%; height: auto; margin: 10px 0 16px; background: #1c120e; }
+    .transport {
+      position: fixed; left: 0; right: 0; bottom: 0; z-index: 6;
+      display: flex; gap: 10px; align-items: center; flex-wrap: wrap;
+      padding: 10px 16px;
+      background: var(--walnut); color: var(--cream);
+    }
+    .transport button { background: transparent; color: var(--cream); border-color: rgba(251, 246, 236, .35); }
+    .transport button[aria-pressed="true"] { background: var(--amber); color: var(--ink); border-color: var(--amber); }
+    .transport span { font-size: .78rem; }
+    @media (max-width: 860px) {
+      .stage { grid-template-columns: 1fr; }
+      .top nav { display: none; }
+      h1 { font-size: 2.6rem; }
+    }
+  </style>
+</head>
+<body>
+  <header class="top">
+    <a class="brand" href="index.html">Neo-Soul Chord Progressions</a>
+    <nav>
+      <a href="#chart">Chart</a>
+      <a href="#files">Files</a>
+      <a href="#reading">Recorded reading</a>
+      <a href="media.html">Stills</a>
+      <a href="midi/arrangement.mid">Arrangement</a>
+    </nav>
+  </header>
+  <main>
+    <section class="stage">
+      <div>
+        <p class="kicker">Eight studies · extensions, suspensions, voice leading</p>
+        <h1 id="title">Suspended Step</h1>
+        <p class="lede" id="identity"></p>
+        <p class="meta" id="facts"></p>
+        <p id="voicing"></p>
+        <p class="note" id="limits"></p>
+        <p class="note" id="departures"></p>
+      </div>
+      <div>
+        <div class="rail" id="rail" role="tablist" aria-label="Studies"></div>
+        <div class="switch" role="group" aria-label="Variation">
+          <button type="button" id="var-a" aria-pressed="true">Variation A</button>
+          <button type="button" id="var-b" aria-pressed="false">Variation B</button>
+        </div>
+        <div class="chart" id="chart">
+          <svg id="leads" aria-hidden="true"></svg>
+          <div class="columns" id="columns"></div>
+        </div>
+        <div class="basslane" id="basslane" hidden>
+          <p>Bass guide, not part of the chord file</p>
+          <div id="bassnotes"></div>
+        </div>
+        <p class="status" id="status" role="status">Reading the MIDI.</p>
+      </div>
+    </section>
+    <p>Chord files are the upper voices. Bass guides are separate monophonic files and are not part of the core count.</p>
+    <p class="warn">Use either the combined arrangement or the separate parts. Do not stack the part files on top of the combined file.</p>
+    <h2 id="files">Files</h2>
+    <p class="meta">Validation PASS. Core 16. Bass guides 16. <a href="midi/validation-Cursor.json">validation report</a> · <a href="catalog/catalog-Cursor.json">catalog</a></p>
+    <div class="table-scroll">
+    <table class="files">
+      <thead><tr><th>Part</th><th>Role</th><th>Var</th><th>Count</th><th>BPM</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td><a href="midi/s01-suspended-step/chords-a.mid">s01.chords.a</a></td><td>chord-progression</td><td>a</td><td>core</td><td>76</td><td>16</td></tr><tr><td><a href="midi/s01-suspended-step/chords-b.mid">s01.chords.b</a></td><td>chord-progression</td><td>b</td><td>core</td><td>76</td><td>20</td></tr><tr><td><a href="midi/s01-suspended-step/bass-guide-a.mid">s01.bass.a</a></td><td>bass-guide</td><td>a</td><td>bass guide</td><td>76</td><td>4</td></tr><tr><td><a href="midi/s01-suspended-step/bass-guide-b.mid">s01.bass.b</a></td><td>bass-guide</td><td>b</td><td>bass guide</td><td>76</td><td>4</td></tr><tr><td><a href="midi/s02-minor-nine/chords-a.mid">s02.chords.a</a></td><td>chord-progression</td><td>a</td><td>core</td><td>84</td><td>32</td></tr><tr><td><a href="midi/s02-minor-nine/chords-b.mid">s02.chords.b</a></td><td>chord-progression</td><td>b</td><td>core</td><td>84</td><td>36</td></tr><tr><td><a href="midi/s02-minor-nine/bass-guide-a.mid">s02.bass.a</a></td><td>bass-guide</td><td>a</td><td>bass guide</td><td>84</td><td>8</td></tr><tr><td><a href="midi/s02-minor-nine/bass-guide-b.mid">s02.bass.b</a></td><td>bass-guide</td><td>b</td><td>bass guide</td><td>84</td><td>8</td></tr><tr><td><a href="midi/s03-gospel-plate/chords-a.mid">s03.chords.a</a></td><td>chord-progression</td><td>a</td><td>core</td><td>68</td><td>12</td></tr><tr><td><a href="midi/s03-gospel-plate/chords-b.mid">s03.chords.b</a></td><td>chord-progression</td><td>b</td><td>core</td><td>68</td><td>20</td></tr><tr><td><a href="midi/s03-gospel-plate/bass-guide-a.mid">s03.bass.a</a></td><td>bass-guide</td><td>a</td><td>bass guide</td><td>68</td><td>3</td></tr><tr><td><a href="midi/s03-gospel-plate/bass-guide-b.mid">s03.bass.b</a></td><td>bass-guide</td><td>b</td><td>bass guide</td><td>68</td><td>4</td></tr><tr><td><a href="midi/s04-dim-approach/chords-a.mid">s04.chords.a</a></td><td>chord-progression</td><td>a</td><td>core</td><td>92</td><td>32</td></tr><tr><td><a href="midi/s04-dim-approach/chords-b.mid">s04.chords.b</a></td><td>chord-progression</td><td>b</td><td>core</td><td>92</td><td>32</td></tr><tr><td><a href="midi/s04-dim-approach/bass-guide-a.mid">s04.bass.a</a></td><td>bass-guide</td><td>a</td><td>bass guide</td><td>92</td><td>8</td></tr><tr><td><a href="midi/s04-dim-approach/bass-guide-b.mid">s04.bass.b</a></td><td>bass-guide</td><td>b</td><td>bass guide</td><td>92</td><td>8</td></tr><tr><td><a href="midi/s05-shells/chords-a.mid">s05.chords.a</a></td><td>chord-progression</td><td>a</td><td>core</td><td>80</td><td>16</td></tr><tr><td><a href="midi/s05-shells/chords-b.mid">s05.chords.b</a></td><td>chord-progression</td><td>b</td><td>core</td><td>80</td><td>24</td></tr><tr><td><a href="midi/s05-shells/bass-guide-a.mid">s05.bass.a</a></td><td>bass-guide</td><td>a</td><td>bass guide</td><td>80</td><td>8</td></tr><tr><td><a href="midi/s05-shells/bass-guide-b.mid">s05.bass.b</a></td><td>bass-guide</td><td>b</td><td>bass guide</td><td>80</td><td>8</td></tr><tr><td><a href="midi/s06-flat-cycle/chords-a.mid">s06.chords.a</a></td><td>chord-progression</td><td>a</td><td>core</td><td>96</td><td>16</td></tr><tr><td><a href="midi/s06-flat-cycle/chords-b.mid">s06.chords.b</a></td><td>chord-progression</td><td>b</td><td>core</td><td>96</td><td>20</td></tr><tr><td><a href="midi/s06-flat-cycle/bass-guide-a.mid">s06.bass.a</a></td><td>bass-guide</td><td>a</td><td>bass guide</td><td>96</td><td>4</td></tr><tr><td><a href="midi/s06-flat-cycle/bass-guide-b.mid">s06.bass.b</a></td><td>bass-guide</td><td>b</td><td>bass guide</td><td>96</td><td>5</td></tr><tr><td><a href="midi/s07-unresolved/chords-a.mid">s07.chords.a</a></td><td>chord-progression</td><td>a</td><td>core</td><td>72</td><td>12</td></tr><tr><td><a href="midi/s07-unresolved/chords-b.mid">s07.chords.b</a></td><td>chord-progression</td><td>b</td><td>core</td><td>72</td><td>16</td></tr><tr><td><a href="midi/s07-unresolved/bass-guide-a.mid">s07.bass.a</a></td><td>bass-guide</td><td>a</td><td>bass guide</td><td>72</td><td>3</td></tr><tr><td><a href="midi/s07-unresolved/bass-guide-b.mid">s07.bass.b</a></td><td>bass-guide</td><td>b</td><td>bass guide</td><td>72</td><td>4</td></tr><tr><td><a href="midi/s08-open-hands/chords-a.mid">s08.chords.a</a></td><td>chord-progression</td><td>a</td><td>core</td><td>88</td><td>24</td></tr><tr><td><a href="midi/s08-open-hands/chords-b.mid">s08.chords.b</a></td><td>chord-progression</td><td>b</td><td>core</td><td>88</td><td>24</td></tr><tr><td><a href="midi/s08-open-hands/bass-guide-a.mid">s08.bass.a</a></td><td>bass-guide</td><td>a</td><td>bass guide</td><td>88</td><td>8</td></tr><tr><td><a href="midi/s08-open-hands/bass-guide-b.mid">s08.bass.b</a></td><td>bass-guide</td><td>b</td><td>bass guide</td><td>88</td><td>8</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <section class="play" id="reading">
+      <p class="kicker">Recorded reading · study 01 variation A only</p>
+      <p>This MP3 is 25.26 seconds. preview, not a master. The film is 25.25 seconds and shows preview, not master.</p>
+      <audio controls preload="metadata" src="preview/preview.mp3"></audio>
+      <p><a href="preview/preview.mp3">preview/preview.mp3</a></p>
+      <video controls preload="metadata" poster="film/poster.jpg" width="1280" height="720">
+        <source src="film/preview.mp4" type="video/mp4">
+        <track kind="captions" src="film/preview.vtt" srclang="en" label="English" default>
+      </video>
+      <p><a href="film/preview.mp4">film/preview.mp4</a> · <a href="film/preview.vtt">film/preview.vtt</a></p>
+    </section>
+    <p>No program changes are encoded. A conventional GM player will normally use its default piano program for pitched channels unless configured otherwise; compatible GM channel 10 percussion is treated separately. Player behavior may vary.</p>
+    <p>No human listening audition was performed for this build.</p>
+    <p>The GitHub repository is https://github.com/mizcausevic-dev/neo-soul-chord-progressions and it is public. The catalog page is https://mizcausevic-dev.github.io/neo-soul-chord-progressions/ .</p>
+  </main>
+  <div class="transport">
+    <button type="button" id="play">Play chart</button>
+    <button type="button" id="bass-toggle" aria-pressed="false">Bass guide</button>
+    <span id="transport-label">Space plays. J and K change study.</span>
+  </div>
+  <script id="pack" type="application/json">{"studies": [{"id": "s01", "title": "Suspended Step", "bpm": 76, "bars": 8, "collection": "C major", "tonic": "C", "identity": "Close voicings move by step: Cmaj9, Dm11, G13sus, Cmaj7. Fifths are omitted. Variation B flips to first-inversion shells and a different soprano.", "limitations": "Bass guide A fits variation A. Bass guide B fits variation B. Roots live in the bass file, not the chord file.", "voicing": "Right hand, close position around E4 to E5. Root omitted. Left hand is the separate bass guide.", "departures": [], "tempo_us": 789474}, {"id": "s02", "title": "Minor Nine", "bpm": 84, "bars": 8, "collection": "A natural minor", "tonic": "A", "identity": "One chord per bar, roots omitted: Am9, Dm9, Fmaj7, E7sus, Cmaj7, G7sus, Fmaj7, Em7. Variation B changes every inversion and inserts one chromatic cluster.", "limitations": "The chromatic cluster is one beat. The rest of bar 6 is E, A, B, E.", "voicing": "Close voicings. The bass guide carries the roots.", "departures": ["Variation B bar 6 beat 4 uses D#4 (63) as a one-beat approach into E."], "tempo_us": 714286}, {"id": "s03", "title": "Gospel Plate", "bpm": 68, "bars": 8, "collection": "F major", "tonic": "F", "identity": "A four-bar Fmaj9 plate, then a two-bar Bbmaj9 and a two-bar C11. Variation B breaks the plate into suspensions that resolve inside the bar.", "limitations": "Variation A's long hold is the phrase. It is not an unfinished chord.", "voicing": "Four-note close voicing. Fifth omitted on the tonic plate.", "departures": [], "tempo_us": 882353}, {"id": "s04", "title": "Dim Approach", "bpm": 92, "bars": 8, "collection": "D major", "tonic": "D", "identity": "Dmaj9, D#dim7, Em9, A13, then the same roots with a higher soprano. Variation A enters on beat 2. Variation B starts each chord a sixteenth early.", "limitations": "The diminished chord is written as notes. It is not a MIDI controller.", "voicing": "Close voicing. The bass guide plays the roots in time with variation A.", "departures": ["D# (3), C (0), and C# (1) are inside the declared set on purpose, so the diminished approach and the A13 color are not flagged."], "tempo_us": 652174}, {"id": "s05", "title": "Shells", "bpm": 80, "bars": 8, "collection": "G major", "tonic": "G", "identity": "Third and seventh only, entering on the second eighth, with a rest after each shell. Variation B fills the bar and adds a diatonic color tone. Bm uses C, the eleventh, because C# is outside G major.", "limitations": "Roots are omitted from the chord file. Bass guide A supplies them on the same offbeat.", "voicing": "Two-note shells in variation A. Three-note shells in variation B.", "departures": [], "tempo_us": 750000}, {"id": "s06", "title": "Flat Cycle", "bpm": 96, "bars": 8, "collection": "Eb major", "tonic": "Eb", "identity": "Ebmaj9, Cm11, Abmaj7, Bb13, each for two bars, displaced to beat 2. Variation B swaps the Ab for a dominant approach and changes the soprano.", "limitations": "Use bass B with variation B. Bass A still outlines Eb, C, Ab, Bb.", "voicing": "Close voicings starting on beat 2, so the downbeat is a rest.", "departures": ["Variation B bar 4 beat 2 is A, C#, E, A (69, 73, 76, 81) for one quarter, and bass guide B plays A2 (45) for that same quarter. Both are flagged, then the phrase returns to Ab."], "tempo_us": 625000}, {"id": "s07", "title": "Unresolved", "bpm": 72, "bars": 8, "collection": "B Dorian", "tonic": "B", "identity": "Bm11, E7sus, then a held Amaj9 that never returns to B. Variation B keeps that A for two bars, then moves to G, B, D, F#.", "limitations": "The missing return to B is the cadence. It is not a loop error.", "voicing": "Close voicing. The last chord is held for four bars in variation A and two bars in variation B.", "departures": ["Variation B bar 6 includes G4 (67) and bass guide B plays G1 (31) for those two bars. The B, D, and F# beside the G stay in B Dorian and are not flagged."], "tempo_us": 833333}, {"id": "s08", "title": "Open Hands", "bpm": 88, "bars": 8, "collection": "Ab major", "tonic": "Ab", "identity": "Open voicings a tenth apart, one chord per bar. Variation B closes the same roots into a tight cluster and drops the top voice.", "limitations": "The tenth is two notes in one chord file, not a split across hands. The bass guide is still separate.", "voicing": "Variation A spans a tenth. Variation B is closed position. Fifths omitted in both.", "departures": [], "tempo_us": 681818}], "parts": [{"id": "s01.chords.a", "study_id": "s01", "role": "chord-progression", "variation": "a", "path": "midi/s01-suspended-step/chords-a.mid"}, {"id": "s01.chords.b", "study_id": "s01", "role": "chord-progression", "variation": "b", "path": "midi/s01-suspended-step/chords-b.mid"}, {"id": "s01.bass.a", "study_id": "s01", "role": "bass-guide", "variation": "a", "path": "midi/s01-suspended-step/bass-guide-a.mid"}, {"id": "s01.bass.b", "study_id": "s01", "role": "bass-guide", "variation": "b", "path": "midi/s01-suspended-step/bass-guide-b.mid"}, {"id": "s02.chords.a", "study_id": "s02", "role": "chord-progression", "variation": "a", "path": "midi/s02-minor-nine/chords-a.mid"}, {"id": "s02.chords.b", "study_id": "s02", "role": "chord-progression", "variation": "b", "path": "midi/s02-minor-nine/chords-b.mid"}, {"id": "s02.bass.a", "study_id": "s02", "role": "bass-guide", "variation": "a", "path": "midi/s02-minor-nine/bass-guide-a.mid"}, {"id": "s02.bass.b", "study_id": "s02", "role": "bass-guide", "variation": "b", "path": "midi/s02-minor-nine/bass-guide-b.mid"}, {"id": "s03.chords.a", "study_id": "s03", "role": "chord-progression", "variation": "a", "path": "midi/s03-gospel-plate/chords-a.mid"}, {"id": "s03.chords.b", "study_id": "s03", "role": "chord-progression", "variation": "b", "path": "midi/s03-gospel-plate/chords-b.mid"}, {"id": "s03.bass.a", "study_id": "s03", "role": "bass-guide", "variation": "a", "path": "midi/s03-gospel-plate/bass-guide-a.mid"}, {"id": "s03.bass.b", "study_id": "s03", "role": "bass-guide", "variation": "b", "path": "midi/s03-gospel-plate/bass-guide-b.mid"}, {"id": "s04.chords.a", "study_id": "s04", "role": "chord-progression", "variation": "a", "path": "midi/s04-dim-approach/chords-a.mid"}, {"id": "s04.chords.b", "study_id": "s04", "role": "chord-progression", "variation": "b", "path": "midi/s04-dim-approach/chords-b.mid"}, {"id": "s04.bass.a", "study_id": "s04", "role": "bass-guide", "variation": "a", "path": "midi/s04-dim-approach/bass-guide-a.mid"}, {"id": "s04.bass.b", "study_id": "s04", "role": "bass-guide", "variation": "b", "path": "midi/s04-dim-approach/bass-guide-b.mid"}, {"id": "s05.chords.a", "study_id": "s05", "role": "chord-progression", "variation": "a", "path": "midi/s05-shells/chords-a.mid"}, {"id": "s05.chords.b", "study_id": "s05", "role": "chord-progression", "variation": "b", "path": "midi/s05-shells/chords-b.mid"}, {"id": "s05.bass.a", "study_id": "s05", "role": "bass-guide", "variation": "a", "path": "midi/s05-shells/bass-guide-a.mid"}, {"id": "s05.bass.b", "study_id": "s05", "role": "bass-guide", "variation": "b", "path": "midi/s05-shells/bass-guide-b.mid"}, {"id": "s06.chords.a", "study_id": "s06", "role": "chord-progression", "variation": "a", "path": "midi/s06-flat-cycle/chords-a.mid"}, {"id": "s06.chords.b", "study_id": "s06", "role": "chord-progression", "variation": "b", "path": "midi/s06-flat-cycle/chords-b.mid"}, {"id": "s06.bass.a", "study_id": "s06", "role": "bass-guide", "variation": "a", "path": "midi/s06-flat-cycle/bass-guide-a.mid"}, {"id": "s06.bass.b", "study_id": "s06", "role": "bass-guide", "variation": "b", "path": "midi/s06-flat-cycle/bass-guide-b.mid"}, {"id": "s07.chords.a", "study_id": "s07", "role": "chord-progression", "variation": "a", "path": "midi/s07-unresolved/chords-a.mid"}, {"id": "s07.chords.b", "study_id": "s07", "role": "chord-progression", "variation": "b", "path": "midi/s07-unresolved/chords-b.mid"}, {"id": "s07.bass.a", "study_id": "s07", "role": "bass-guide", "variation": "a", "path": "midi/s07-unresolved/bass-guide-a.mid"}, {"id": "s07.bass.b", "study_id": "s07", "role": "bass-guide", "variation": "b", "path": "midi/s07-unresolved/bass-guide-b.mid"}, {"id": "s08.chords.a", "study_id": "s08", "role": "chord-progression", "variation": "a", "path": "midi/s08-open-hands/chords-a.mid"}, {"id": "s08.chords.b", "study_id": "s08", "role": "chord-progression", "variation": "b", "path": "midi/s08-open-hands/chords-b.mid"}, {"id": "s08.bass.a", "study_id": "s08", "role": "bass-guide", "variation": "a", "path": "midi/s08-open-hands/bass-guide-a.mid"}, {"id": "s08.bass.b", "study_id": "s08", "role": "bass-guide", "variation": "b", "path": "midi/s08-open-hands/bass-guide-b.mid"}]}</script>
+  <script>
+    const pack = JSON.parse(document.getElementById("pack").textContent);
+    const NAMES = ["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"];
+    const rail = document.getElementById("rail");
+    const columns = document.getElementById("columns");
+    const leads = document.getElementById("leads");
+    const basslane = document.getElementById("basslane");
+    const bassnotes = document.getElementById("bassnotes");
+    const status = document.getElementById("status");
+    let studyId = "s01";
+    let variation = "a";
+    let chordNotes = [];
+    let bassNotes = [];
+    let showBass = false;
+    let audio = null;
+    let playing = false;
+    let followId = 0;
+
+    function pitchName(pitch) {
+      return NAMES[pitch % 12] + (Math.floor(pitch / 12) - 1);
+    }
+
+    function readVlq(view, offset) {
+      let value = 0;
+      let byte = 0;
+      do {
+        byte = view.getUint8(offset);
+        offset += 1;
+        value = (value << 7) | (byte & 0x7f);
+      } while (byte & 0x80);
+      return [value, offset];
+    }
+
+    function parseMidi(buffer) {
+      const view = new DataView(buffer);
+      const head = String.fromCharCode(view.getUint8(0), view.getUint8(1), view.getUint8(2), view.getUint8(3));
+      if (head !== "MThd" || view.getUint16(12) !== 960) throw new Error("unexpected MIDI header");
+      const tracks = view.getUint16(10);
+      let offset = 14;
+      const notes = [];
+      for (let track = 0; track < tracks; track += 1) {
+        const mark = String.fromCharCode(view.getUint8(offset), view.getUint8(offset + 1), view.getUint8(offset + 2), view.getUint8(offset + 3));
+        if (mark !== "MTrk") throw new Error("missing track");
+        const length = view.getUint32(offset + 4);
+        offset += 8;
+        const end = offset + length;
+        let tick = 0;
+        let status = 0;
+        const open = new Map();
+        while (offset < end) {
+          let delta;
+          [delta, offset] = readVlq(view, offset);
+          tick += delta;
+          let byte = view.getUint8(offset);
+          if (byte < 0x80) {
+            if (!status) throw new Error("running status");
+          } else {
+            status = byte;
+            offset += 1;
+          }
+          if (status === 0xff) {
+            offset += 1;
+            let metaLen;
+            [metaLen, offset] = readVlq(view, offset);
+            offset += metaLen;
+            continue;
+          }
+          if (status === 0xf0 || status === 0xf7) {
+            let sysLen;
+            [sysLen, offset] = readVlq(view, offset);
+            offset += sysLen;
+            continue;
+          }
+          const kind = status & 0xf0;
+          const channel = status & 0x0f;
+          const data1 = byte < 0x80 ? byte : view.getUint8(offset);
+          if (byte >= 0x80) offset += 1;
+          let data2 = 0;
+          if (kind !== 0xc0 && kind !== 0xd0) {
+            data2 = view.getUint8(offset);
+            offset += 1;
+          }
+          const key = channel + ":" + data1;
+          if (kind === 0x90 && data2 > 0) {
+            open.set(key, tick);
+          } else if (kind === 0x80 || (kind === 0x90 && data2 === 0)) {
+            const start = open.get(key);
+            if (start !== undefined) {
+              notes.push({ pitch: data1, start: start, duration: tick - start, velocity: data2 || 80, channel: channel });
+              open.delete(key);
+            }
+          }
+        }
+      }
+      notes.sort((a, b) => a.start - b.start || a.pitch - b.pitch);
+      return notes;
+    }
+
+    function partPath(role) {
+      const found = pack.parts.find((part) => part.study_id === studyId && part.role === role && part.variation === variation);
+      if (!found) throw new Error("missing " + role);
+      return found.path;
+    }
+
+    function study() {
+      return pack.studies.find((item) => item.id === studyId);
+    }
+
+    function renderCopy() {
+      const item = study();
+      document.getElementById("title").textContent = item.title;
+      document.getElementById("identity").textContent = item.identity;
+      document.getElementById("facts").textContent = item.id + " · " + item.bpm + " BPM · " + item.bars + " bars · " + item.collection + " · tonic " + item.tonic;
+      document.getElementById("voicing").textContent = item.voicing;
+      document.getElementById("limits").textContent = item.limitations;
+      document.getElementById("departures").textContent = item.departures.length ? item.departures.join(" ") : "No pitch in this study is flagged as a departure.";
+      document.getElementById("transport-label").textContent = item.title + " " + variation.toUpperCase() + " · Space plays · J and K change study";
+      for (const button of rail.querySelectorAll("button")) {
+        button.setAttribute("aria-pressed", button.dataset.id === studyId ? "true" : "false");
+      }
+      document.getElementById("var-a").setAttribute("aria-pressed", variation === "a" ? "true" : "false");
+      document.getElementById("var-b").setAttribute("aria-pressed", variation === "b" ? "true" : "false");
+    }
+
+    function groups(notes) {
+      const map = new Map();
+      for (const note of notes) {
+        if (!map.has(note.start)) map.set(note.start, []);
+        map.get(note.start).push(note);
+      }
+      return [...map.entries()].sort((a, b) => a[0] - b[0]);
+    }
+
+    function draw() {
+      const item = study();
+      const container = item.bars * 4 * 960;
+      const grouped = groups(chordNotes);
+      columns.innerHTML = "";
+      if (!grouped.length) {
+        status.textContent = "This variation has no chord notes.";
+        return;
+      }
+      const pitches = chordNotes.map((note) => note.pitch);
+      const low = Math.min(...pitches);
+      const high = Math.max(...pitches);
+      const span = Math.max(1, high - low);
+      grouped.forEach((entry, index) => {
+        const start = entry[0];
+        const next = index + 1 < grouped.length ? grouped[index + 1][0] : container;
+        const col = document.createElement("div");
+        col.className = "col";
+        col.dataset.start = String(start);
+        col.dataset.end = String(next);
+        entry[1].forEach((note) => {
+          const tone = document.createElement("div");
+          tone.className = "tone";
+          tone.dataset.pitch = String(note.pitch);
+          tone.textContent = pitchName(note.pitch);
+          const rise = (note.pitch - low) / span;
+          tone.style.bottom = (rise * 82) + "%";
+          col.appendChild(tone);
+        });
+        columns.appendChild(col);
+      });
+      bassnotes.innerHTML = "";
+      basslane.hidden = !showBass;
+      if (showBass) {
+        for (const note of bassNotes) {
+          const mark = document.createElement("div");
+          mark.className = "bnote";
+          mark.textContent = pitchName(note.pitch);
+          mark.style.left = (8 + (note.start / container) * 84) + "%";
+          bassnotes.appendChild(mark);
+        }
+      }
+      requestAnimationFrame(drawLines);
+    }
+
+    function drawLines() {
+      const cols = [...columns.querySelectorAll(".col")];
+      leads.innerHTML = "";
+      const width = columns.clientWidth;
+      const height = columns.clientHeight;
+      leads.setAttribute("viewBox", "0 0 " + width + " " + height);
+      leads.setAttribute("width", String(width));
+      leads.setAttribute("height", String(height));
+      for (let index = 0; index < cols.length - 1; index += 1) {
+        const left = [...cols[index].querySelectorAll(".tone")];
+        const right = [...cols[index + 1].querySelectorAll(".tone")];
+        const used = new Set();
+        for (const tone of left) {
+          let best = null;
+          let bestGap = 99;
+          for (const other of right) {
+            if (used.has(other)) continue;
+            const gap = Math.abs(Number(tone.dataset.pitch) - Number(other.dataset.pitch));
+            if (gap < bestGap) {
+              best = other;
+              bestGap = gap;
+            }
+          }
+          if (!best) continue;
+          used.add(best);
+          const a = tone.getBoundingClientRect();
+          const b = best.getBoundingClientRect();
+          const box = columns.getBoundingClientRect();
+          const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+          line.setAttribute("x1", String(a.left + a.width / 2 - box.left));
+          line.setAttribute("y1", String(a.top + a.height / 2 - box.top));
+          line.setAttribute("x2", String(b.left + b.width / 2 - box.left));
+          line.setAttribute("y2", String(b.top + b.height / 2 - box.top));
+          line.setAttribute("stroke", "#8a4b12");
+          line.setAttribute("stroke-width", "1.4");
+          leads.appendChild(line);
+        }
+      }
+    }
+
+    async function loadStudy() {
+      stopPlayback();
+      renderCopy();
+      status.textContent = "Reading the MIDI.";
+      columns.innerHTML = "";
+      leads.innerHTML = "";
+      try {
+        const chordRes = await fetch(partPath("chord-progression"));
+        const bassRes = await fetch(partPath("bass-guide"));
+        if (!chordRes.ok || !bassRes.ok) throw new Error("MIDI request failed");
+        chordNotes = parseMidi(await chordRes.arrayBuffer());
+        bassNotes = parseMidi(await bassRes.arrayBuffer());
+        status.textContent = chordNotes.length + " chord notes. Bass guide stays on its own row.";
+        draw();
+      } catch (error) {
+        chordNotes = [];
+        bassNotes = [];
+        status.textContent = "The MIDI did not load. " + error.message;
+      }
+    }
+
+    function freq(pitch) {
+      return 440 * Math.pow(2, (pitch - 69) / 12);
+    }
+
+    function schedule(ctx, pitch, when, duration, amount, type) {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = type;
+      osc.frequency.value = freq(pitch);
+      const attack = Math.min(0.02, duration * 0.25);
+      const end = when + duration;
+      gain.gain.setValueAtTime(0.0001, when);
+      gain.gain.exponentialRampToValueAtTime(amount, when + attack);
+      gain.gain.exponentialRampToValueAtTime(0.0001, Math.max(end, when + attack + 0.01));
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(when);
+      osc.stop(end + 0.02);
+    }
+
+    function stopPlayback() {
+      playing = false;
+      cancelAnimationFrame(followId);
+      if (audio) {
+        audio.close();
+        audio = null;
+      }
+      document.getElementById("play").textContent = "Play chart";
+      document.querySelectorAll(".col.now").forEach((col) => col.classList.remove("now"));
+    }
+
+    function playChart() {
+      if (!chordNotes.length) return;
+      stopPlayback();
+      const ctx = new AudioContext();
+      audio = ctx;
+      playing = true;
+      document.getElementById("play").textContent = "Stop";
+      const item = study();
+      const seconds = (tick) => tick / 960 * item.tempo_us / 1000000;
+      const origin = ctx.currentTime + 0.06;
+      const started = origin;
+      for (const note of chordNotes) {
+        const when = origin + seconds(note.start);
+        const duration = Math.max(0.05, seconds(note.duration));
+        schedule(ctx, note.pitch, when, duration, 0.07, "sine");
+        schedule(ctx, note.pitch, when, duration, 0.015, "triangle");
+      }
+      if (showBass) {
+        for (const note of bassNotes) {
+          schedule(ctx, note.pitch, origin + seconds(note.start), Math.max(0.05, seconds(note.duration)), 0.11, "sine");
+        }
+      }
+      const container = seconds(item.bars * 4 * 960);
+      const follow = () => {
+        if (!playing || !audio) return;
+        const tick = (audio.currentTime - started) * 1000000 / item.tempo_us * 960;
+        document.querySelectorAll(".col").forEach((col) => {
+          const start = Number(col.dataset.start);
+          const end = Number(col.dataset.end);
+          col.classList.toggle("now", tick >= start && tick < end);
+        });
+        if (audio.currentTime - started < container) followId = requestAnimationFrame(follow);
+        else stopPlayback();
+      };
+      follow();
+    }
+
+    function togglePlay() {
+      if (playing) stopPlayback();
+      else playChart();
+    }
+
+    function step(direction) {
+      const index = pack.studies.findIndex((item) => item.id === studyId);
+      const next = (index + direction + pack.studies.length) % pack.studies.length;
+      studyId = pack.studies[next].id;
+      loadStudy();
+    }
+
+    pack.studies.forEach((item) => {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.dataset.id = item.id;
+      button.textContent = item.id.slice(1) + " " + item.title;
+      button.addEventListener("click", () => {
+        studyId = item.id;
+        loadStudy();
+      });
+      rail.appendChild(button);
+    });
+    document.getElementById("var-a").addEventListener("click", () => { variation = "a"; loadStudy(); });
+    document.getElementById("var-b").addEventListener("click", () => { variation = "b"; loadStudy(); });
+    document.getElementById("play").addEventListener("click", togglePlay);
+    document.getElementById("bass-toggle").addEventListener("click", () => {
+      showBass = !showBass;
+      document.getElementById("bass-toggle").setAttribute("aria-pressed", showBass ? "true" : "false");
+      basslane.hidden = !showBass;
+      if (chordNotes.length) draw();
+    });
+    window.addEventListener("keydown", (event) => {
+      const tag = document.activeElement && document.activeElement.tagName;
+      if (tag === "INPUT" || tag === "TEXTAREA") return;
+      if (event.code === "Space") {
+        event.preventDefault();
+        togglePlay();
+      } else if (event.key === "j" || event.key === "J") {
+        step(-1);
+      } else if (event.key === "k" || event.key === "K") {
+        step(1);
+      }
+    });
+    window.addEventListener("resize", () => { if (chordNotes.length) drawLines(); });
+    loadStudy();
+  </script>
+</body>
+</html>

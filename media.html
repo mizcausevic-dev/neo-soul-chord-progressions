@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Neo-Soul Chord Progressions, stills</title>
+  <style>
+    :root { color-scheme: light; --paper:#f4ead7; --ink:#2a1c14; --muted:#6d5648; --line:rgba(42,28,20,.16); --amber:#8a4b12; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--paper); color: var(--ink); font-family: Georgia, "Iowan Old Style", serif; line-height: 1.45; }
+    a { color: var(--amber); }
+    header, main { width: min(1120px, calc(100% - 2rem)); margin: 0 auto; }
+    header { padding: 28px 0 8px; }
+    h1 { font-weight: 500; font-size: clamp(2.2rem, 5vw, 4rem); line-height: 0.95; margin: 8px 0; }
+    .kicker { font-family: ui-monospace, Menlo, Consolas, monospace; letter-spacing: .14em; text-transform: uppercase; color: #c97a2a; font-size: .75rem; }
+    .hero, .shot, .play { margin: 0 0 28px; }
+    img, video, audio { display: block; width: 100%; height: auto; background: #1c120e; }
+    figcaption { color: var(--muted); font-family: ui-monospace, Menlo, Consolas, monospace; font-size: .82rem; padding: 8px 0 0; }
+    .gallery { display: grid; grid-template-columns: 1.1fr .7fr; gap: 18px; align-items: start; margin-bottom: 28px; }
+    .play { border-top: 1px solid var(--line); padding-top: 22px; }
+    @media (max-width: 800px) { .gallery { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <header>
+    <p class="kicker"><a href="index.html">Neo-Soul Chord Progressions</a></p>
+    <h1>Stills, then the recording.</h1>
+    <p>Each frame keeps its own shape. The film and the MP3 sit under the pictures.</p>
+  </header>
+  <main>
+    <figure class="hero">
+      <img src="art/hero.jpg" width="1280" height="720" alt="Illustration of vertical note stacks on a cream panel with a separate bass row. Not a photograph of a studio or of performers.">
+      <figcaption>art/hero.jpg · 1280 by 720</figcaption>
+    </figure>
+    <div class="gallery">
+      <figure class="shot">
+        <img src="art/square.jpg" width="1080" height="1080" alt="Square illustration of vertical note stacks and a separate bass row.">
+        <figcaption>art/square.jpg · 1080 by 1080</figcaption>
+      </figure>
+      <figure class="shot">
+        <img src="social/instagram-Cursor/portrait.jpg" width="1080" height="1350" alt="Vertical crop of the note-stack illustration.">
+        <figcaption>portrait · 1080 by 1350</figcaption>
+      </figure>
+    </div>
+    <div class="gallery">
+      <figure class="shot">
+        <img src="social/x-Cursor/card.jpg" width="1600" height="900" alt="Wide card of the note-stack illustration.">
+        <figcaption>x card · 1600 by 900</figcaption>
+      </figure>
+      <figure class="shot">
+        <img src="film/poster.jpg" width="1280" height="720" alt="Film poster with the words preview, not master.">
+        <figcaption>film/poster.jpg · disclosure on the picture</figcaption>
+      </figure>
+    </div>
+    <section class="play">
+      <p class="kicker">Recorded reading · study 01 only</p>
+      <audio controls preload="metadata" src="preview/preview.mp3"></audio>
+      <p><a href="preview/preview.mp3">preview/preview.mp3</a></p>
+      <video controls preload="metadata" poster="film/poster.jpg" width="1280" height="720">
+        <source src="film/preview.mp4" type="video/mp4">
+        <track kind="captions" src="film/preview.vtt" srclang="en" label="English" default>
+      </video>
+    </section>
+  </main>
+</body>
+</html>
