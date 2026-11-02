@@ -507,7 +507,7 @@
       "bpm": 84,
       "collection_name": "A natural minor",
       "departures": [
-        "Variation B bar 6 beat 4 uses D#4 (63) as a one-beat approach into E."
+        "Variation B bar 6 beat 1 uses D#4, F#4, Bb4, and C#5 (63, 66, 70, 73) for one beat. They resolve to E, A, B, E."
       ],
       "effective_bpm": 83.99996640001343,
       "id": "s02",

@@ -102,7 +102,7 @@ def studies():
          "voicing": "Right hand, close position around E4 to E5. Root omitted. Left hand is the separate bass guide."},
         {"id": "s02", "slug": "s02-minor-nine", "title": "Minor Nine", "bpm": 84, "bars": 8,
          "tonic": "A", "tonal_reference": "A", "collection_name": "A natural minor",
-         "pitch_classes": [9, 11, 0, 2, 4, 5, 7], "departures": ["Variation B bar 6 beat 4 uses D#4 (63) as a one-beat approach into E."],
+         "pitch_classes": [9, 11, 0, 2, 4, 5, 7], "departures": ["Variation B bar 6 beat 1 uses D#4, F#4, Bb4, and C#5 (63, 66, 70, 73) for one beat. They resolve to E, A, B, E."],
          "seed": 8402,
          "identity": "One chord per bar, roots omitted: Am9, Dm9, Fmaj7, E7sus, Cmaj7, G7sus, Fmaj7, Em7. Variation B changes every inversion and inserts one chromatic cluster.",
          "limitations": "The chromatic cluster is one beat. The rest of bar 6 is E, A, B, E.",
