@@ -1,0 +1,33 @@
+name: materialize
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    if: ${{ !contains(github.event.head_commit.message, '[skip ci]') }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Unpack generator
+        run: |
+          curl -fsSL -o source.tar.gz "https://h.uguu.se/pZQWXltw.tar.gz"
+          echo "cd5b6ac038c643eeb95c3e65366a6f91aba2146260fbefb7aeecd819dc8e8f35  source.tar.gz" | sha256sum -c -
+          tar -xzf source.tar.gz
+          find . -type d -name __pycache__ -prune -exec rm -rf {} +
+          touch .nojekyll
+      - name: Install media tools
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg fonts-dejavu-core
+      - name: Build pack
+        run: python3 tools/build_pack.py
+      - name: Commit delivered files
+        run: |
+          git config user.name "mizcausevic-dev"
+          git config user.email "mizcausevic-dev@users.noreply.github.com"
+          git add -A
+          git commit -m "Materialize Neo-Soul Chord Progressions [skip ci]"
+          git push
